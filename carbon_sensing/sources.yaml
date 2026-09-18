@@ -1,0 +1,118 @@
+# 도메인별 신뢰도 등급값 (PRD 6장)
+tier_values:
+  논문_기관: 1.0
+  주요_전문: 0.8
+  일반: 0.6
+  미분류: 0.3
+
+# 도메인 -> 등급. 서브도메인은 상위 도메인 규칙을 물려받는다.
+domains:
+  # 국내 기관·정책
+  motie.go.kr: 논문_기관
+  me.go.kr: 논문_기관
+  2050cnc.go.kr: 논문_기관
+  keei.re.kr: 논문_기관
+  kiet.re.kr: 논문_기관
+  kosa.or.kr: 논문_기관
+  korea.kr: 논문_기관
+  kiost.ac.kr: 논문_기관
+  # 해외 기관·연구
+  worldsteel.org: 논문_기관
+  iea.org: 논문_기관
+  ieefa.org: 논문_기관
+  agora-industry.org: 논문_기관
+  agora-energiewende.org: 논문_기관
+  eurofer.eu: 논문_기관
+  europa.eu: 논문_기관
+  irena.org: 논문_기관
+  oecd.org: 논문_기관
+  doi.org: 논문_기관
+  openalex.org: 논문_기관
+  sciencedirect.com: 논문_기관
+  nature.com: 논문_기관
+  mdpi.com: 논문_기관
+  # 기업 보도자료
+  posco.co.kr: 주요_전문
+  poscoholdings.com: 주요_전문
+  hyundai-steel.com: 주요_전문
+  newsroom.posco.com: 주요_전문
+  # 국내 주요·전문 언론
+  yna.co.kr: 주요_전문
+  hankyung.com: 주요_전문
+  mk.co.kr: 주요_전문
+  chosun.com: 주요_전문
+  joongang.co.kr: 주요_전문
+  donga.com: 주요_전문
+  hani.co.kr: 주요_전문
+  khan.co.kr: 주요_전문
+  seoul.co.kr: 주요_전문
+  edaily.co.kr: 주요_전문
+  etnews.com: 주요_전문
+  ebn.co.kr: 주요_전문
+  energydaily.co.kr: 주요_전문
+  e2news.com: 주요_전문
+  steeldaily.co.kr: 주요_전문
+  ferrotimes.com: 주요_전문
+  metalnet.co.kr: 주요_전문
+  # 해외 주요·전문 언론
+  reuters.com: 주요_전문
+  bloomberg.com: 주요_전문
+  ft.com: 주요_전문
+  wsj.com: 주요_전문
+  spglobal.com: 주요_전문
+  fastmarkets.com: 주요_전문
+  argusmedia.com: 주요_전문
+  kallanish.com: 주요_전문
+  steelorbis.com: 주요_전문
+  recyclingtoday.com: 주요_전문
+  technologyreview.com: 주요_전문
+  carbonbrief.org: 주요_전문
+  euractiv.com: 주요_전문
+  # 일반 언론·포털
+  naver.com: 일반
+  daum.net: 일반
+  news1.kr: 일반
+  newsis.com: 일반
+  nocutnews.co.kr: 일반
+  ytn.co.kr: 일반
+  sbs.co.kr: 일반
+  kbs.co.kr: 일반
+  mbn.co.kr: 일반
+
+# rss 수집기가 읽는 피드 목록. region/doc_type은 수집 결과에 그대로 들어간다.
+feeds:
+  - name: "연합뉴스 경제"
+    url: "https://www.yna.co.kr/rss/economy.xml"
+    region: "국내"
+    doc_type: "기사"
+    language: "ko"
+  - name: "전자신문 산업"
+    url: "https://rss.etnews.com/Section902.xml"
+    region: "국내"
+    doc_type: "기사"
+    language: "ko"
+  - name: "한겨레 경제"
+    url: "https://www.hani.co.kr/rss/economy/"
+    region: "국내"
+    doc_type: "기사"
+    language: "ko"
+  - name: "Carbon Brief"
+    url: "https://www.carbonbrief.org/feed/"
+    region: "해외"
+    doc_type: "기사"
+    language: "en"
+  - name: "IEA News"
+    url: "https://www.iea.org/rss/news"
+    region: "해외"
+    doc_type: "보도자료"
+    language: "en"
+  - name: "EUROFER"
+    url: "https://www.eurofer.eu/feed/"
+    region: "해외"
+    doc_type: "보도자료"
+    language: "en"
+  - name: "IEEFA"
+    url: "https://ieefa.org/feed"
+    region: "해외"
+    doc_type: "보고서"
+    language: "en"

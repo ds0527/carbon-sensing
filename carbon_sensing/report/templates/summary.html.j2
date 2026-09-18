@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<style>{{ css }}</style>
+</head>
+<body>
+<div class="sheet sheet--onepage">
+
+  <div class="hero">
+    <div class="kicker">Carbon Neutrality Sensing · Steel</div>
+    <h1>{{ headline or "철강산업 탄소중립 동향" }}</h1>
+    <div class="meta">
+      <span><b>{{ period_label }}</b> ({{ period_days }}일)</span>
+      <span>{{ base_topic }}{% if extra_topics %} · {{ extra_topics|join(", ") }}{% endif %}</span>
+      <span>{{ generated_at }}</span>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="cell"><span class="n">{{ stats.raw or 0 }}</span><span class="k">수집</span></div>
+    <div class="cell"><span class="n">{{ stats.in_period or 0 }}</span><span class="k">기간 내</span></div>
+    <div class="cell"><span class="n">{{ visible_count }}</span><span class="k">관련</span></div>
+    <div class="cell"><span class="n">{{ representative|length }}</span><span class="k">대표</span></div>
+    {% if category_counts %}
+    <div class="cell">
+      <span class="n">{{ category_counts|length }}</span><span class="k">카테고리</span>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if trends %}
+  <section>
+    <h2>핵심 트렌드</h2>
+    <ul>
+      {% for t in trends %}
+      <li>{{ t.text }}{% if t.cite %}<span class="cite">[{{ t.cite }}]</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <section>
+    <h2>대표 기사</h2>
+    {% if not grouped %}
+    <p class="note">{{ skipped_reason or "대표 기사가 선정되지 않았습니다." }}</p>
+    {% endif %}
+    {% for group in grouped %}
+    <div class="cat-head">
+      <span class="chip {{ group.chip }}">{{ group.category }}</span>
+      <span class="count">{{ group.docs|length }}건</span>
+    </div>
+    {% for d in group.docs %}
+    <div class="art">
+      <div class="t">
+        <span class="cite">[{{ d.cite }}]</span>
+        <a href="{{ d.url }}">{{ d.title }}</a>
+      </div>
+      <div class="src">{{ d.source_name }} · {{ d.date }} · 관련도 {{ d.score }}</div>
+      {% if d.first_line %}<div class="sum">{{ d.first_line }}</div>{% endif %}
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </section>
+
+  {% if implications %}
+  <section>
+    <h2>시사점</h2>
+    <ul>
+      {% for i in implications %}
+      <li>{{ i.text }}{% if i.cite %}<span class="cite">[{{ i.cite }}]</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <footer>
+    <span>{{ base_topic }} 동향 센싱</span>
+    <span>{{ generated_at }}{% if usage %} · {{ usage.total_tokens }} 토큰{% endif %}</span>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<style>{{ css }}</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="hero">
+    <div class="kicker">Detailed Report · Carbon Neutrality Sensing</div>
+    <h1>{{ base_topic }} 동향 리포트</h1>
+    <div class="meta">
+      <span><b>{{ period_label }}</b> ({{ period_days }}일)</span>
+      <span>추가 주제 {{ extra_topics|join(", ") if extra_topics else "없음" }} [{{ mode }}]</span>
+      <span>{{ generated_at }}</span>
+    </div>
+  </div>
+
+  {% if headline %}<div class="headline">{{ headline }}</div>{% endif %}
+
+  <div class="band">
+    <div class="cell"><span class="n">{{ stats.raw or 0 }}</span><span class="k">원시 수집</span></div>
+    <div class="cell"><span class="n">{{ stats.deduped or 0 }}</span><span class="k">중복 제거</span></div>
+    <div class="cell"><span class="n">{{ stats.in_period or 0 }}</span><span class="k">기간 내</span></div>
+    <div class="cell"><span class="n">{{ visible_count }}</span><span class="k">관련</span></div>
+    <div class="cell"><span class="n">{{ representative|length }}</span><span class="k">대표</span></div>
+  </div>
+
+  <section>
+    <h2>실행 조건</h2>
+    <table>
+      <tbody>
+        <tr><td>기간</td><td>{{ period_label }} ({{ period_days }}일)</td></tr>
+        <tr><td>기본 주제</td><td>{{ base_topic }}</td></tr>
+        <tr><td>추가 주제</td><td>{{ extra_topics|join(", ") if extra_topics else "없음" }} [{{ mode }}]</td></tr>
+        <tr><td>제외어</td><td>{{ excludes|join(", ") if excludes else "없음" }}</td></tr>
+        <tr><td>질의어</td><td>{{ queries|join(" · ") }}</td></tr>
+        {% if stats.by_category %}
+        <tr><td>카테고리 분포</td><td>{% for k, v in stats.by_category.items() %}{{ k }} {{ v }}건{% if not loop.last %} · {% endif %}{% endfor %}</td></tr>
+        {% endif %}
+        {% if usage %}
+        <tr><td>LLM 사용량</td><td>{{ usage.total_tokens }} 토큰 · 호출 {{ usage.calls }}회 · 캐시 {{ usage.cached_calls }}회 · 추정 USD {{ usage.estimated_cost_usd }}</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>수집 현황</h2>
+    <table>
+      <thead><tr><th>수집기</th><th>상태</th><th class="num">건수</th><th>비고</th></tr></thead>
+      <tbody>
+        {% for c in collectors %}
+        <tr>
+          <td>{{ c.collector }}</td>
+          <td>{{ c.status }}</td>
+          <td class="num">{{ c.count }}</td>
+          <td>{{ c.note }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>대표 기사 요약·시사점</h2>
+    {% if not grouped %}
+    <p class="note">{{ skipped_reason or "대표 기사가 선정되지 않았습니다." }}</p>
+    {% endif %}
+    {% for group in grouped %}
+    <div class="cat-head">
+      <span class="chip {{ group.chip }}">{{ group.category }}</span>
+      <span class="count">{{ group.docs|length }}건</span>
+    </div>
+    {% for d in group.docs %}
+    <div class="art">
+      <div class="t"><span class="cite">[{{ d.cite }}]</span> <a href="{{ d.url }}">{{ d.title }}</a></div>
+      <div class="src">{{ d.source_name }} · {{ d.doc_type }} · {{ d.region }} · {{ d.date }} · 관련도 {{ d.score }}</div>
+      {% if d.selection_reason %}<div class="sum">선정 사유: {{ d.selection_reason }}</div>{% endif %}
+      {% if d.summary %}
+      <h3>요약</h3>
+      <ul>{% for s in d.summary %}<li>{{ s.text }}{% if s.cite %}<span class="cite">[{{ s.cite }}]</span>{% endif %}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if d.implications %}
+      <h3>시사점</h3>
+      <ul>{% for s in d.implications %}<li>{{ s.text }}{% if s.cite %}<span class="cite">[{{ s.cite }}]</span>{% endif %}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </section>
+
+  {% if trends or implications %}
+  <section>
+    <h2>종합</h2>
+    {% if trends %}
+    <h3>핵심 트렌드</h3>
+    <ul>{% for t in trends %}<li>{{ t.text }}{% if t.cite %}<span class="cite">[{{ t.cite }}]</span>{% endif %}</li>{% endfor %}</ul>
+    {% endif %}
+    {% if implications %}
+    <h3>시사점</h3>
+    <ul>{% for i in implications %}<li>{{ i.text }}{% if i.cite %}<span class="cite">[{{ i.cite }}]</span>{% endif %}</li>{% endfor %}</ul>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <section>
+    <h2>관련도 순 문서 목록</h2>
+    {% if documents %}
+    <table>
+      <thead><tr><th class="num">#</th><th class="num">점수</th><th>카테고리</th><th>제목</th><th>출처·유형</th><th>게재일</th><th class="num">중복</th></tr></thead>
+      <tbody>
+        {% for d in documents %}
+        <tr>
+          <td class="num">{{ loop.index }}</td>
+          <td class="score">{{ d.score }}</td>
+          <td>{{ d.category }}</td>
+          <td class="title"><a href="{{ d.url }}">{{ d.title }}</a></td>
+          <td>{{ d.source_name }} · {{ d.doc_type }} · {{ d.region }}</td>
+          <td class="num">{{ d.date }}</td>
+          <td class="num">{{ d.duplicate_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="note">표시할 문서가 없습니다. 기간을 넓히거나 주제를 바꿔보세요.</p>
+    {% endif %}
+  </section>
+
+  {% if date_unknown %}
+  <section>
+    <h2>부록 · 일자 미확인</h2>
+    <ul>{% for d in date_unknown %}<li><a href="{{ d.url }}">{{ d.title }}</a> — {{ d.source_name }}</li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+
+  <footer>
+    <span>{{ base_topic }} 동향 센싱 · 상세 리포트</span>
+    <span>{{ generated_at }}</span>
+  </footer>
+
+</div>
+</body>
+</html>

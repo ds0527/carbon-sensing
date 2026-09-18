@@ -1,0 +1,29 @@
+collect:
+  per_query_limit: 50          # 질의어 1개당 최대 수집 건수
+  max_queries: 12              # 한번에 돌리는 질의어 상한 (PRD 5장)
+  concurrency: 5               # 동시 요청 수
+  domain_delay_seconds: 1.0    # 도메인당 1초 1회
+  request_timeout_seconds: 20.0
+  max_retries: 3               # 지수 백오프 3회
+  body_fetch_limit: 60         # 본문을 실제로 내려받는 상위 문서 수
+  respect_robots: true
+  long_period_warning_days: 90
+
+scoring:
+  # PRD 6장 가중치. semantic은 2단계에서 켜진다.
+  # 1단계에서는 semantic을 빼고 나머지를 재정규화해 계산한다.
+  weights:
+    semantic: 0.40
+    keyword: 0.20
+    source_trust: 0.20
+    recency: 0.10
+    spread: 0.10
+  min_score_to_show: 40.0      # 이 아래는 기본 숨김 (--show-all로 해제)
+  title_weight: 2.0
+  body_weight: 1.0
+  no_body_penalty: 0.85        # 본문 추출 실패 시 의미 점수 패널티
+  list_size: 30                # 목록에 보여줄 상위 건수
+
+report:
+  top_n: 5                     # 대표 기사 기본 건수
+  body_char_limit: 4000        # LLM에 넣을 본문 길이 (2단계)

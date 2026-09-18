@@ -1,0 +1,350 @@
+/* 라이트 듀오톤 디자인 시스템.
+   두 톤(잉크 = 딥 네이비, 액센트 = 블루)만 쓰고, 계조는 두 톤의 농도로만 만든다.
+   기본 배경은 밝게 두고, 블루는 히어로·강조 헤더·칩·링크 등에만 적당히 쓴다. */
+
+:root {
+  /* 잉크 톤 (진한 배경·텍스트용) */
+  --ink-900: #0B1424;
+  --ink-800: #122036;
+  --ink-700: #1B2C47;
+  --ink-600: #E2E8F2;
+  --ink-500: #CBD5E3;
+
+  /* 액센트 톤 (블루) */
+  --duo-500: #2563EB;
+  --duo-400: #3B82F6;
+  --duo-300: #93C5FD;
+  --duo-dim: rgba(37, 99, 235, 0.55);
+  --duo-faint: rgba(37, 99, 235, 0.08);
+  --duo-hair: rgba(37, 99, 235, 0.28);
+
+  /* 배경·텍스트 */
+  --bg: #F5F8FC;
+  --surface: #FFFFFF;
+  --fg: #0F172A;
+  --fg-muted: #5B6B82;
+  --fg-on-duo: #FFFFFF;
+
+  --font-sans: "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo",
+    "Noto Sans KR", system-ui, sans-serif;
+  --font-mono: "Consolas", "D2Coding", ui-monospace, monospace;
+
+  --measure: 74ch;
+  --radius: 2px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 10.5pt;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+.sheet {
+  max-width: 190mm;
+  margin: 0 auto;
+  padding: 0 0 14mm;
+  background: var(--surface);
+}
+
+/* 16:9 히어로. Spotify 커버류 듀오톤 포스터 — 부드러운 그라디언트 대신
+   두 색을 뚜렷한 경계로 나눈다. 텍스트는 항상 잉크 블록(왼쪽) 안에만
+   두어, 그라디언트의 중간 전이 구간과 겹쳐 대비가 무너지는 일이
+   구조적으로 생기지 않는다(과거 소프트 그라디언트에서 실제로 겪은 문제). */
+.hero {
+  position: relative;
+  /* width를 먼저 고정해야 aspect-ratio가 높이를 계산한다.
+     max-height만 주면 비율이 거꾸로 폭을 줄여 배너가 반토막 난다. */
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: linear-gradient(
+    104deg,
+    var(--ink-900) 0%, var(--ink-900) 62%,
+    var(--duo-500) 62%, var(--duo-500) 100%
+  );
+  border-bottom: 2px solid var(--duo-500);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 8mm 9mm 6mm;
+  color: #E9EFF7;
+}
+
+/* 액센트 블록(오른쪽)에만 얹는 사선 하프톤 질감 — 포스터 인쇄 느낌 */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    58deg,
+    rgba(255, 255, 255, 0.14) 0 1.1px,
+    transparent 1.1px 7px
+  );
+  -webkit-mask-image: linear-gradient(104deg, transparent 62%, #000 62%);
+  mask-image: linear-gradient(104deg, transparent 62%, #000 62%);
+  pointer-events: none;
+}
+
+.hero > * { position: relative; z-index: 1; }
+
+.hero .kicker {
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--duo-300);
+  margin-bottom: 3mm;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 23pt;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  max-width: 30ch;
+  color: #FFFFFF;
+  /* 대각선 그라디언트의 중간 전이 구간(밝은 파랑->어두운 잉크)이 텍스트와
+     겹치면 대비가 무너져 헤드라인 일부가 안 보인다(긴 제목일수록 잘 걸린다).
+     배경과 무관하게 읽히도록 그림자로 안전판을 둔다. */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.hero .meta {
+  margin-top: 4mm;
+  font-size: 8.5pt;
+  color: rgba(233, 239, 247, 0.75);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 5mm;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+.hero .meta b { color: #FFFFFF; font-weight: 600; }
+
+/* 헤드라인 배너 — 블루 반전 블록 */
+.headline {
+  margin: 7mm 9mm 0;
+  padding: 5mm 6mm;
+  background: var(--duo-500);
+  color: var(--fg-on-duo);
+  font-size: 12.5pt;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+}
+
+.band {
+  margin: 6mm 9mm 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(28mm, 1fr));
+  border-top: 1px solid var(--duo-hair);
+  border-bottom: 1px solid var(--duo-hair);
+}
+
+.band .cell { padding: 3.5mm 0; }
+.band .cell + .cell { border-left: 1px solid var(--ink-600); padding-left: 4mm; }
+.band .n {
+  display: block;
+  font-size: 15pt;
+  font-weight: 800;
+  color: var(--duo-500);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.band .k {
+  display: block;
+  margin-top: 1.5mm;
+  font-size: 7pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+section { margin: 7mm 9mm 0; }
+
+h2 {
+  margin: 0 0 3.5mm;
+  font-size: 9pt;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--duo-500);
+  padding-bottom: 1.8mm;
+  border-bottom: 2px solid var(--duo-500);
+}
+
+h3 {
+  margin: 5mm 0 2.5mm;
+  font-size: 10.5pt;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+p { margin: 0 0 2.5mm; max-width: var(--measure); }
+
+a { color: var(--duo-500); text-decoration: none; border-bottom: 1px solid var(--duo-hair); }
+
+ul { margin: 0 0 3mm; padding-left: 0; list-style: none; }
+
+li {
+  position: relative;
+  padding-left: 5mm;
+  margin-bottom: 1.8mm;
+  max-width: var(--measure);
+}
+
+li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.52em;
+  width: 2.6mm;
+  height: 1px;
+  background: var(--duo-500);
+}
+
+/* 카테고리 칩 — 블루 톤 안에서 채움/외곽선/농도/파선으로만 구분한다 */
+.chip {
+  display: inline-block;
+  font-size: 7pt;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.7mm 2.2mm;
+  border: 1px solid var(--duo-500);
+  color: var(--duo-500);
+  vertical-align: 0.12em;
+}
+.chip--fill { background: var(--duo-500); color: var(--fg-on-duo); }
+.chip--dim { border-color: var(--duo-dim); color: var(--duo-400); }
+.chip--ghost { border-style: dashed; }
+
+.cat-head {
+  display: flex;
+  align-items: center;
+  gap: 2.5mm;
+  margin: 5mm 0 2.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--ink-600);
+}
+.cat-head .count { font-size: 7.5pt; color: var(--fg-muted); }
+
+.art { margin-bottom: 3.5mm; }
+.art .t { font-weight: 700; font-size: 10pt; letter-spacing: -0.02em; }
+.art .src { font-size: 7.5pt; color: var(--fg-muted); margin-top: 0.8mm; }
+.art .sum { font-size: 9pt; margin-top: 1.2mm; color: var(--fg); }
+
+.cite {
+  font-size: 7pt;
+  font-weight: 800;
+  color: var(--duo-500);
+  vertical-align: super;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+
+thead th {
+  text-align: left;
+  font-size: 7pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--duo-500);
+  border-bottom: 1.5px solid var(--duo-500);
+  padding: 2mm 2mm 1.6mm;
+  white-space: nowrap;
+}
+
+tbody td { padding: 1.8mm 2mm; border-bottom: 1px solid var(--ink-600); vertical-align: top; }
+tbody tr:nth-child(even) { background: var(--duo-faint); }
+
+td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.score { font-family: var(--font-mono); font-weight: 700; color: var(--duo-500); }
+td.title { max-width: 96mm; }
+
+.note {
+  font-size: 7.5pt;
+  color: var(--fg-muted);
+  border-left: 2px solid var(--duo-hair);
+  padding: 1.5mm 0 1.5mm 3mm;
+  margin: 3mm 0;
+}
+
+.unverified { color: var(--fg-muted); font-size: 7.5pt; font-style: italic; }
+
+footer {
+  margin: 9mm 9mm 0;
+  padding-top: 3mm;
+  border-top: 1px solid var(--ink-600);
+  font-size: 7pt;
+  color: var(--fg-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ── 인쇄: 이미 밝은 배경이라 색을 다시 정의할 필요는 없다.
+   여기서는 페이지 크기·여백·히어로 높이 등 인쇄 전용 레이아웃만 손본다. */
+@page {
+  size: A4;
+  margin: 12mm 10mm;
+}
+
+@media print {
+  body { background: #fff; font-size: 9.5pt; }
+
+  .sheet { max-width: none; padding: 0; box-shadow: none; }
+
+  /* A4 한 장을 지키려면 16:9(190x107mm)는 너무 크다. 띠로 누른다.
+     화면용 다크 대각선 배너를 그대로 찍으면 토너를 다 쓰므로, 밝은 배경에
+     왼쪽 액센트 띠만 남긴다. */
+  .hero {
+    aspect-ratio: auto;
+    height: 42mm;
+    padding: 6mm 0 5mm;
+    background: linear-gradient(
+      118deg,
+      var(--duo-500) 0%,
+      var(--duo-500) 3mm,
+      #fff 3mm
+    );
+    border-bottom: 2px solid var(--duo-500);
+  }
+  .hero::after { display: none; }
+  .hero h1 {
+    font-size: 19pt;
+    color: var(--fg);
+    text-shadow: none;
+  }
+  .hero .kicker { color: var(--duo-500); text-shadow: none; }
+  .hero .meta { color: var(--fg-muted); text-shadow: none; }
+  .hero .meta b { color: var(--fg); }
+
+  .band, section, footer { margin-left: 0; margin-right: 0; }
+
+  a { border-bottom: none; }
+
+  /* 1장 요약은 절대 넘기지 않는다 */
+  .sheet--onepage { page-break-inside: avoid; }
+  h2, h3, .cat-head { page-break-after: avoid; }
+  .art, li, tr { page-break-inside: avoid; }
+}
+
+/* 화면 미리보기: 밝은 페이지 위에 카드로 띄운다 */
+@media screen {
+  .hero { padding: 10mm 9mm 8mm; }
+  .hero h1 { font-size: 26pt; }
+
+  body { padding: 8mm 0; }
+  .sheet {
+    box-shadow: 0 0 0 1px var(--ink-600), 0 18px 40px rgba(15, 23, 42, 0.1);
+  }
+}

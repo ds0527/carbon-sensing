@@ -1,0 +1,188 @@
+base_topic: 철강산업의 탄소중립
+base_queries_ko:
+- 철강 탄소중립
+- 철강산업 탄소배출
+- 수소환원제철
+- 전기로 전환 제철
+- 탄소국경조정제도 철강
+- 철강 저탄소 기술
+base_queries_en:
+- steel decarbonization
+- green steel
+- hydrogen direct reduced iron steel
+- DRI-EAF steelmaking
+- CBAM steel
+- steel net zero
+steel_keywords:
+- 철강
+- 철강사
+- 철강업
+- 제철소
+- 제철산업
+- 제철업
+- 일관제철
+- 환원제철
+- 수소환원제철
+- 제강
+- 고로
+- 용광로
+- 전기로
+- 쇳물
+- 조강
+- 열연
+- 냉연
+- 철스크랩
+- 포스코
+- 현대제철
+- 동국제강
+- 세아제강
+- steel
+- steelmaking
+- ironmaking
+- iron ore
+- blast furnace
+- hyrex
+- arcelormittal
+- nippon steel
+- tata steel
+- thyssenkrupp
+- ssab
+- stegra
+- baowu
+carbon_keywords:
+- 탄소중립
+- 탄소배출
+- 탄소감축
+- 탈탄소
+- 저탄소
+- 넷제로
+- 온실가스
+- 배출권
+- 탄소국경
+- CBAM
+- 탄소세
+- 그린수소
+- 수소환원
+- ETS
+- decarboni
+- net zero
+- net-zero
+- carbon
+- emission
+- green steel
+- hydrogen
+- scope 1
+- scope 3
+bonus_keywords:
+- DRI
+- EAF
+- CCUS
+- CCS
+- 전기로 전환
+- 재생에너지
+- RE100
+- ESG
+- 기후공시
+- green premium
+- carbon border
+default_excludes:
+- 주가
+- 추천주
+- 목표주가
+- 수혜주
+- 코스피 마감
+- 부고
+- 인사
+profiles:
+  CBAM:
+    extra_topics:
+    - CBAM
+    - 탄소국경조정제도
+    - EU 탄소국경세
+    mode: and
+  수소환원제철:
+    extra_topics:
+    - 수소환원제철
+    - HyREX
+    - 하이렉스
+    mode: and
+category_keywords:
+  정책:
+  - 정책
+  - 규제
+  - 법안
+  - 지원금
+  - 보조금
+  - 배출권
+  - 탄소국경
+  - CBAM
+  - 관세
+  - 국회
+  - 정부
+  - 법제화
+  - 가이드라인
+  - policy
+  - regulation
+  - subsidy
+  - tariff
+  - legislation
+  - government
+  - mandate
+  설비:
+  - 착공
+  - 준공
+  - 투자
+  - 증설
+  - 신설
+  - 설비
+  - 공장
+  - 라인
+  - 가동
+  - 조업중단
+  - 고로
+  - 전기로
+  - capex
+  - plant
+  - facility
+  - investment
+  - expansion
+  - construction
+  - commissioning
+  기술:
+  - 기술
+  - 개발
+  - 특허
+  - 실증
+  - 파일럿
+  - 연구
+  - 수소환원제철
+  - HyREX
+  - CCUS
+  - CCS
+  - technology
+  - research
+  - pilot
+  - patent
+  - innovation
+  - breakthrough
+  - R&D
+  시장:
+  - 가격
+  - 수요
+  - 공급
+  - 실적
+  - 매출
+  - 영업이익
+  - 수출
+  - 수입
+  - 계약
+  - 공급계약
+  - 수주
+  - price
+  - demand
+  - supply
+  - earnings
+  - export
+  - import
+  - contract
+  - market

@@ -1,0 +1,15 @@
+# 라이트 듀오톤 테마: 밝은 배경 + 블루 액센트 두 톤만 쓴다.
+[theme]
+base = "light"
+primaryColor = "#2563EB"
+backgroundColor = "#F5F8FC"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#0F172A"
+font = "sans serif"
+
+[server]
+headless = true
+fileWatcherType = "auto"
+
+[browser]
+gatherUsageStats = false
