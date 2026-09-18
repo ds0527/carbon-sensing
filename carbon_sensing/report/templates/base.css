@@ -26,7 +26,7 @@
   --fg-on-duo: #FFFFFF;
 
   --font-sans: "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo",
-    "Noto Sans KR", system-ui, sans-serif;
+    "Noto Sans KR", "Noto Sans CJK KR", system-ui, sans-serif;
   --font-mono: "Consolas", "D2Coding", ui-monospace, monospace;
 
   --measure: 74ch;

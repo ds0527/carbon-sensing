@@ -137,6 +137,12 @@ Playwright's sync API cannot run inside an asyncio event loop (the pipeline is a
 dispatches through a `ThreadPoolExecutor` for this reason — don't call `_render_pdf_sync` directly from async
 code.
 
+On Streamlit Community Cloud (or any Linux container), the Chromium binary and Korean fonts aren't
+preinstalled: `packages.txt` lists the apt libraries Chromium needs plus `fonts-noto-cjk` (without it, Hangul
+renders as tofu boxes — `base.css`'s `--font-sans` is Windows/Mac-first and Linux has none of those), and
+`html_renderer.py::_launch_chromium()` lazily runs `playwright install chromium` on first launch failure since
+the platform doesn't run that step automatically.
+
 CSS lives in one file (`report/templates/base.css`) shared by both HTML templates, with a `@media print` block
 that inverts the dark duotone (ink navy + blue) to a light, toner-light variant. The Streamlit theme
 (`ui/theme.py`) duplicates the same two-tone palette and hero/band/chip styles by design so the web UI and the
