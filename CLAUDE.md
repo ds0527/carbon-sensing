@@ -164,6 +164,12 @@ banner (caught via a rendered screenshot, not a test).
 All four are loaded through `@lru_cache`'d functions in `config.py`; call `reset_config_cache()` after writing
 to any of the YAML files at runtime (the UI's profile save does this) or stale data will be served.
 
+On Streamlit Community Cloud there is no `.env` file (it's gitignored, so it never reaches the deployed repo);
+secrets are entered in the dashboard's Secrets panel instead and only exposed via `st.secrets`, not as OS
+environment variables. `app.py` bridges this at import time — before `carbon_sensing.config` loads — by copying
+`st.secrets` into `os.environ` so `Settings()` (which only reads env vars/`.env`) picks them up unchanged. Keep
+Secrets-panel key names identical to the `.env` names for this to work.
+
 ### Storage
 
 `storage/db.py::Database` is one SQLite file (`outputs/carbon_sensing.db`, WAL mode) shared by CLI and UI

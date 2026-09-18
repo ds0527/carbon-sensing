@@ -67,10 +67,33 @@ carbon_keywords:
 - decarboni
 - net zero
 - net-zero
-- carbon
-- emission
+- carbon neutral
+- carbon emission
+- carbon dioxide
+- co2
+- carbon footprint
+- carbon price
+- carbon tax
+- carbon capture
+- carbon credit
+- low carbon
+- low-carbon
+- co2 emission
+- ghg emission
+- emission reduction
+- emission trading
 - green steel
-- hydrogen
+- green hydrogen
+- blue hydrogen
+- hydrogen reduction
+- hydrogen-based
+- hydrogen plasma
+- hydrogen ironmaking
+- hydrogen steelmaking
+- hydrogen injection
+- hydrogen dri
+- h2-based
+- h2 reduction
 - scope 1
 - scope 3
 bonus_keywords:
@@ -93,6 +116,10 @@ default_excludes:
 - 코스피 마감
 - 부고
 - 인사
+- corrosion inhibit
+- embrittlement
+- corrosion behavior
+- corrosion resistance
 profiles:
   CBAM:
     extra_topics:
