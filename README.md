@@ -84,10 +84,16 @@ TAVILY_API_KEY = "..."
 `app.py` 맨 위에서 `st.secrets`를 환경변수로 옮겨주므로 `Settings()`가 그대로
 읽습니다.
 
+PDF까지 되게 하려면 저장소 루트의 `packages.txt`(Chromium 실행에 필요한 apt
+라이브러리 목록)가 같이 배포돼야 합니다. Chromium 바이너리 자체는 최초 PDF
+생성 시 `html_renderer.py`가 자동으로 `playwright install chromium`을 한 번
+실행해서 받아옵니다(`_ensure_chromium_installed`) — 이미 설치돼 있으면 이 단계는
+건너뜁니다. 첫 PDF 생성만 다운로드 때문에 조금 느릴 수 있습니다.
+
 알아둘 제약:
-- Streamlit Cloud 컨테이너엔 Chromium이 없고 `playwright install chromium`이
-  자동 실행되지 않습니다. PDF 생성만 조용히 건너뛰고(`report/markdown_renderer.py`
-  가 실패를 잡아 로그만 남김) Markdown·HTML·Excel·JSON은 정상 생성됩니다.
+- Streamlit Cloud의 apt 패키지 이름은 배포 시점의 베이스 이미지(Debian 버전)에
+  따라 달라질 수 있습니다. `packages.txt`의 패키지 중 하나라도 빌드에서 실패하면
+  로그에 어떤 패키지인지 나오니 그 이름만 최신 이름으로 고치면 됩니다.
 - `outputs/`와 `carbon_sensing.db`는 컨테이너 안에만 있어 재시작·재배포 시
   초기화됩니다 — 실행 이력과 캐시가 유지되지 않고, 재실행 시 API를 다시 호출합니다.
 

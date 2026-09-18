@@ -173,6 +173,29 @@ PRINT_H_PX = 1032
 MIN_SCALE = 0.55  # 이보다 줄이면 읽기 어렵다
 
 
+def _ensure_chromium_installed() -> None:
+    """Streamlit Community Cloud 등은 `playwright install chromium`을 배포
+    시점에 자동 실행해주지 않는다. 최초 실행 시 한 번만 내려받고, 이미
+    설치돼 있으면 launch()가 바로 성공하므로 이 함수는 호출조차 안 된다."""
+    import subprocess
+    import sys
+
+    subprocess.run(
+        [sys.executable, "-m", "playwright", "install", "chromium"],
+        check=False,
+        capture_output=True,
+    )
+
+
+def _launch_chromium(p: Any):
+    """Chromium이 없으면 한 번 설치를 시도한 뒤 재시도한다."""
+    try:
+        return p.chromium.launch()
+    except Exception:
+        _ensure_chromium_installed()
+        return p.chromium.launch()
+
+
 def _render_pdf_sync(html: str, path: Path, one_page: bool) -> Path | None:
     """실제 PDF 생성. 반드시 이벤트 루프가 없는 스레드에서 호출한다.
 
@@ -184,7 +207,7 @@ def _render_pdf_sync(html: str, path: Path, one_page: bool) -> Path | None:
     margin = {"top": "12mm", "bottom": "12mm", "left": "10mm", "right": "10mm"}
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch()
+            browser = _launch_chromium(p)
             page = browser.new_page(
                 viewport={"width": PRINT_W_PX, "height": PRINT_H_PX}
             )
@@ -245,7 +268,7 @@ def _probe_sync() -> tuple[bool, str]:
 
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch()
+            browser = _launch_chromium(p)
             browser.close()
     except Exception:
         return False, "Chromium 미설치 - python -m playwright install chromium"
