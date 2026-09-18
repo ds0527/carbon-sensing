@@ -80,6 +80,16 @@ during development:
 - `strict=False`: plain substring match, used only by `processing/categorize.py`. Needed because legitimate
   compounds like `실증설비` contain `설비` without a word boundary — strict mode would miss them.
 
+`topics.yaml`'s `carbon_keywords` deliberately avoids bare English words like `carbon`, `hydrogen`, `emission`
+even though `strict=True` word-boundary matching would let them through cleanly — the problem isn't false word
+boundaries, it's false *domain*: `carbon` matches "carbon **steel**" (an alloy classification, not emissions),
+`hydrogen` matches "hydrogen **embrittlement**" (materials degradation), `emission` matches "**emission**
+spectroscopy" (an analytical technique). These wrongly passed the topic gate for a large share of OpenAlex
+results before being caught (verified against a real run: 32 of 92 documents above the display threshold were
+this kind of noise). Use specific phrases (`carbon emission`, `green hydrogen`, `hydrogen reduction`, etc.)
+instead of bare nouns, and add title-only `default_excludes` entries (`corrosion inhibit`, `embrittlement`) for
+recurring false-positive paper genres rather than trying to enumerate every safe compound phrase.
+
 ### Category classification is separate from relevance scoring
 
 `processing/categorize.py` assigns one of 설비/정책/기술/시장/기타 per document by counting non-strict keyword
